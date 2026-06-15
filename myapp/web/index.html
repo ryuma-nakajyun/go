@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>World Data</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border: 1px solid #ccc;
+            padding: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>World Data</h1>
+    <table>
+        <tr>
+            <th>国名</th>
+            <th>コード</th>
+            <th>首都</th>
+            <th>緯度</th>
+            <th>経度</th>
+        </tr>
+        {{range .}}
+        <tr>
+            <td>{{.NameJP}}</td>
+            <td>{{.Code}}</td>
+            <td>{{.CapitalJP}}</td>
+            <td>{{.Lat}}</td>
+            <td>{{.Lon}}</td>
+        </tr>
+        {{end}}
+    </table>
+</body>
+
+</html>

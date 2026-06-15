@@ -1,0 +1,38 @@
+# ===== Build artifacts =====
+build/
+*.o
+*.out
+*.exe
+*.a
+*.so
+*.dll
+
+# ===== Logs =====
+log/
+*.log
+
+# ===== Editor / IDE =====
+# .vscode/
+# *.code-workspace
+
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+
+# ===== Secrets / Keys =====
+*.pem
+*.key
+*.crt
+*.p12
+*.der
+
+# ===== Temporary files =====
+*.tmp
+*.swp
+*.bak
+
+# ===== CMake (もし使う場合) =====
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile

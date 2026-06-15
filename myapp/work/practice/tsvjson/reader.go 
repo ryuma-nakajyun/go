@@ -1,0 +1,111 @@
+/**
+ * @file ConvertTSVToJSON.go
+ * @brief TSV を JSON に変換するユーティリティ
+ * @details
+ *   - TSV（タブ区切り）ファイルを読み込み、JSON 配列として出力する。
+ *   - 標準出力へ書き出すモードと、ファイルへ書き出すモードの両方を提供する。
+ *   - ストリーミング処理のため、大規模 TSV に対してもメモリ効率が良い。
+ */
+package main
+
+import (
+    "encoding/csv"
+    "encoding/json"
+    "fmt"
+    "log"
+    "os"
+)
+
+/**
+ * Function: openTSVFile
+ * ------------------------------
+ * @brief TSV ファイルを開く
+ * @param filePath ファイルパス
+ * @return (*os.File, error)
+ * @retval *os.File 正常にファイルを開けた場合
+ * @retval nil ファイルを開けなかった場合
+ * @retval error OS から返されたエラー
+ */
+func openTSVFile(filePath string) (*os.File, error) {
+    file, err := os.Open(filePath)
+    if err != nil {
+        return nil, err
+    }
+    return file, nil
+}
+
+/**
+ * Function: createTSVReader
+ * ------------------------------
+ * @brief TSV 用の csv.Reader を生成する
+ * @param file 入力ファイル
+ * @return *csv.Reader
+ * @retval *csv.Reader TSV 読み取り用の Reader
+ */
+func createTSVReader(file *os.File) *csv.Reader {
+    reader := csv.NewReader(file)
+    reader.Comma = '\t'
+    return reader
+}
+
+/**
+ * Function: readHeaderRow
+ * ------------------------------
+ * @brief TSV のヘッダ行を読み込む
+ * @param reader csv.Reader
+ * @return ([]string, error)
+ * @retval []string ヘッダ行
+ * @retval nil ヘッダ読み込み失敗時
+ * @retval error Read() が返すエラー
+ */
+func readHeaderRow(reader *csv.Reader) ([]string, error) {
+    header, err := reader.Read()
+    if err != nil {
+        return nil, err
+    }
+    return header, nil
+}
+
+/**
+ * Function: processDataRowsToWriter
+ * ------------------------------
+ * @brief TSV のデータ行を読み込み JSON を指定 writer に書き出す
+ * @param reader TSV 読み取り用 csv.Reader
+ * @param header ヘッダ行
+ * @param w 出力先ファイル
+ * @return error
+ * @retval nil 正常終了
+ * @retval error 行読み込み失敗／書き込み失敗など
+ */
+func processDataRowsToWriter(reader *csv.Reader, header []string, w *os.File) error {
+    jsonWriter := json.NewEncoder(w)
+    jsonWriter.SetIndent("", "  ")
+
+    _, _ = w.Write([]byte("[\n"))
+
+    isFirst := true
+
+    for {
+        dataRow, err := reader.Read()
+        if err != nil {
+            break
+        }
+
+        record := make(map[string]string)
+        for i, value := range dataRow {
+            if i < len(header) {
+                record[header[i]] = value
+            }
+        }
+
+        if !isFirst {
+            _, _ = w.Write([]byte(",\n"))
+        }
+        isFirst = false
+
+        writeJSONRecord(jsonWriter, record)
+    }
+
+    _, _ = w.Write([]byte("]\n"))
+    return nil
+}
