@@ -5,14 +5,30 @@
     <meta charset="UTF-8">
     <title>World Data</title>
     <style>
-        table {
-            border-collapse: collapse;
+        body {
+            background: #0A0A0A;
+            color: #E5E5E5;
+            font-family: sans-serif;
         }
 
-        td,
+        table {
+            border-collapse: collapse;
+            background: #1A1A1A;
+        }
+
+        th,
+        td {
+            border: 1px solid #2A2A2A;
+            padding: 6px 10px;
+        }
+
         th {
-            border: 1px solid #ccc;
-            padding: 4px;
+            background: #222222;
+            color: #EAEAEA;
+        }
+
+        tr:nth-child(even) {
+            background: #161616;
         }
     </style>
 </head>
@@ -21,19 +37,27 @@
     <h1>World Data</h1>
     <table>
         <tr>
-            <th>国名</th>
             <th>コード</th>
+            <th>国名</th>
+            <!-- <th>国名</th> -->
+            <!-- <th>首都</th>
+            <th>国名</th> -->
             <th>首都</th>
             <th>緯度</th>
             <th>経度</th>
+                        <th>北/南</th> <!-- ← 追加 -->
         </tr>
         {{range .}}
         <tr>
-            <td>{{.NameJP}}</td>
             <td>{{.Code}}</td>
+            <td>{{.NameJP}}</td>
+            <!-- <td>{{.NameJPS}}</td> -->
+            <!-- <td>{{.NameEN}}</td>
+            <td>{{.NameENS}}</td> -->
             <td>{{.CapitalJP}}</td>
             <td>{{.Lat}}</td>
             <td>{{.Lon}}</td>
+                       <td>{{.Hemisphere}}</td> <!-- ← 追加 -->
         </tr>
         {{end}}
     </table>
